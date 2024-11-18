@@ -57,7 +57,7 @@ def train_model():
 
     # Best model
     best_model = grid_search.best_estimator_
-    print("Melhores parÃ¢metros:", grid_search.best_params_)
+    print("Melhores parâmetros:", grid_search.best_params_)
 
     # Predictions
     y_pred = best_model.predict(X_test)
