@@ -12,6 +12,12 @@ def load_data():
     X = data.drop('Class', axis=1)
     y = data['Class']
 
+    # Create a new combined feature for V16, V17, and V18
+    X['V_combined'] = (X['V16'] + X['V17'] + X['V18'])
+
+    # Drop the original V16, V17, and V18 columns
+    X = X.drop(['V16', 'V17', 'V18', 'V24', 'V22', 'V25'], axis=1)
+
     # Scale the features
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
@@ -20,7 +26,7 @@ def load_data():
     smote = SMOTE()
     X_resampled, y_resampled = smote.fit_resample(X_scaled, y)
 
-    return X_resampled, y_resampled
+    return X_resampled, y_resampled, X.columns
 
 # Plot ROC curve
 def plot_roc_curve(y_test, y_proba):
@@ -37,10 +43,10 @@ def plot_roc_curve(y_test, y_proba):
     plt.show()
 
 # Plot correlation matrix
-def plot_correlation_matrix(X):
+def plot_correlation_matrix(X, columns):
     plt.figure(figsize=(12, 10))
-    correlation_matrix = pd.DataFrame(X).corr()
-    sns.heatmap(correlation_matrix, annot=False, cmap='coolwarm', square=True, xticklabels=True, yticklabels=True)
+    correlation_matrix = pd.DataFrame(X, columns=columns).corr()
+    sns.heatmap(correlation_matrix, annot=False, cmap='coolwarm', square=True, xticklabels=columns, yticklabels=columns)
     plt.title('Correlation Matrix')
     plt.show()
 
@@ -57,7 +63,7 @@ def plot_confusion_matrix(y_test, y_pred):
 # Create, train, and evaluate the model
 def train_model():
     # Load and preprocess data
-    X_resampled, y_resampled = load_data()
+    X_resampled, y_resampled, columns = load_data()
 
     # Split into train and test sets
     X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled, test_size=0.2, random_state=42)
@@ -83,6 +89,6 @@ def train_model():
     # Plot confusion matrix
     plot_confusion_matrix(y_test, y_pred)
 
-    plot_correlation_matrix(X_resampled)
+    plot_correlation_matrix(X_resampled, columns)
 
 train_model()

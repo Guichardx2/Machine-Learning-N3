@@ -21,7 +21,7 @@ def load_data():
     smote = SMOTE()
     X_resampled, y_resampled = smote.fit_resample(X_scaled, y)
 
-    return X_resampled, y_resampled
+    return X_resampled, y_resampled, X.columns
 
 # Plot ROC curve
 def plot_roc_curve(y_test, model):
@@ -63,10 +63,22 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, roc_auc_score, precision_score, recall_score, f1_score
 
+# Plotting function for feature importance
+def plot_feature_importance(importances, feature_names):
+    # Convert to DataFrame for easier plotting
+    feature_importance_df = pd.DataFrame({'Feature': feature_names, 'Importance': importances})
+    feature_importance_df = feature_importance_df.sort_values(by='Importance', ascending=False)
+
+    # Plot
+    plt.figure(figsize=(10, 8))
+    sns.barplot(x='Importance', y='Feature', data=feature_importance_df)
+    plt.title('Feature Importance from Random Forest')
+    plt.show()
+
 def train_model():
     print("Começou")
     # Load and preprocess data
-    X_resampled, y_resampled = load_data()
+    X_resampled, y_resampled, feature_names = load_data()
 
     # Split into train and test sets
     X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled,
@@ -94,10 +106,16 @@ def train_model():
     print("Recall:", recall_score(y_test, y_pred))
     print("ROC-AUC:", roc_auc_score(y_test, y_proba))
 
-    # Plot ROC curve
-    plot_roc_curve(y_test, y_proba)
+    # Feature importance
+    feature_importances = model.feature_importances_
+
+    # Plot feature importance
+    plot_feature_importance(feature_importances, feature_names)
 
     # Plot confusion matrix
     plot_confusion_matrix(y_test, y_pred)
+
+    # Plot ROC curve
+    plot_roc_curve(y_test, y_proba)
 
 train_model()

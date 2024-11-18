@@ -2,3 +2,5 @@ seaborn
 pandas
 numpy
 matplotlib
+kagglehub
+python-dotenv
