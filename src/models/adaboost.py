@@ -13,7 +13,7 @@ import seaborn as sns
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 def load_data():
-    data = pd.read_csv('data/raw/creditcard.csv')
+    data = pd.read_csv('data/creditcard.csv')
     X = data.drop('Class', axis=1)
     y = data['Class']
     return X, y
