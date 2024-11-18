@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 import pandas as pd
 
 def load_data():
-    data = pd.read_csv('data/raw/creditcard.csv')
+    data = pd.read_csv('data/creditcard.csv')
     X = data.drop('Class', axis=1)
     y = data['Class']
 

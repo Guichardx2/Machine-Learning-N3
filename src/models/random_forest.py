@@ -9,7 +9,7 @@ from imblearn.over_sampling import SMOTE
 from sklearn.model_selection import train_test_split
 
 def load_data():
-    data = pd.read_csv('data/raw/creditcard.csv')
+    data = pd.read_csv('data/creditcard.csv')
     X = data.drop('Class', axis=1)
     y = data['Class']
 
